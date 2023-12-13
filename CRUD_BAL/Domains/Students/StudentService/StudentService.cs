@@ -1,37 +1,56 @@
-﻿
-namespace CRUD_BAL.Domains.Students.StudentService
+﻿namespace CRUD_BAL.Domains.Students.StudentServices
 {
     public class StudentService:IStudentService
     {
-        private readonly IStudentRepository _studentService;
-        public StudentService(IStudentRepository studentService)
+        private readonly IStudentRepository _studentRepository;
+        private readonly IGenericService _genericService;
+        public StudentService(IStudentRepository studentRepository, IGenericService genericService)
         {
-            _studentService = studentService;
+            _studentRepository = studentRepository;
+            _genericService = genericService;
         }
 
-        public Task<StudentForReadDto> AddStudent(StudentForCreateDto dto)
+        public async Task<StudentForReadDto> AddStudent(StudentForCreateDto dto)
         {
-            throw new NotImplementedException();
+            var adaptedStudent =dto.Adapt<Student>();
+            var createdStudent = await _studentRepository.AddAsync(adaptedStudent);
+           return createdStudent.Adapt<StudentForReadDto>();
         }
 
-        public Task<StudentForReadDto> DeleteStudent(Guid id)
+        public async Task<OneOf<StudentForReadDto, Response>> DeleteStudent(Guid id)
         {
-            throw new NotImplementedException();
+          var deletedStudent = await _studentRepository.Delete(id);
+            if (deletedStudent != null)
+            {
+                return deletedStudent.Adapt<StudentForReadDto>();
+            }
+            return await _genericService.CreateResponse(ResponseMessages.Error,ResponseMessages.Deleted(ResponseMessages.Student));
         }
 
-        public Task<List<StudentForReadDto>> GetAllStudents()
+        public async Task<List<StudentForReadDto>> GetAllStudents()
         {
-            throw new NotImplementedException();
+            var students = await _studentRepository.GetAllAsync();
+            return students.Adapt<List<StudentForReadDto>>();
         }
 
-        public Task<StudentForReadDto> GetStudentById(int id)
+        public async Task<OneOf<StudentForReadDto, Response>> GetStudentById(Guid id)
         {
-            throw new NotImplementedException();
+          var student = await _studentRepository.GetByIdAsync(id);
+            if(student != null)
+            {
+                return student.Adapt<StudentForReadDto>();
+            }
+            return await _genericService.CreateResponse(ResponseMessages.Error, ResponseMessages.NotFound(ResponseMessages.notFound));
         }
 
-        public Task<StudentForReadDto> UpdateStudent(Guid id, StudentForUpdateDto dto)
+        public async Task<OneOf<StudentForReadDto, Response>> UpdateStudent(Guid id, StudentForUpdateDto dto)
         {
-            throw new NotImplementedException();
+            var student = await _studentRepository.Update(id, dto.Adapt<Student>());
+            if (student != null)
+            {
+                return student.Adapt<StudentForReadDto>();
+            }
+            return await _genericService.CreateResponse(ResponseMessages.Error, ResponseMessages.NotFound(ResponseMessages.notFound));
         }
     }
 }
