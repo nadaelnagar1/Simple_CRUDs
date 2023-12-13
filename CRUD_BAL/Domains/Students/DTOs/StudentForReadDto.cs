@@ -5,6 +5,7 @@ namespace CRUD_BAL.Domains.Students.DTOs
 {
     public record StudentForReadDto
     {
+        public Guid Id { get; set; } 
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";
         public string EmailAddress { get; set; } = "";

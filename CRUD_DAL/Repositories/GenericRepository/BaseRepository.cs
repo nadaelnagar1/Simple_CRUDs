@@ -51,7 +51,9 @@ namespace CRUD_DAL.Repositories.GenericRepository
             var myentity = await _context.Set<TEntity>().FindAsync(Id);
             if (myentity != null)
             {
-              var updated= _context.Set<TEntity>().Update(myentity);
+                 myentity = entity;
+                var updated = _context.Set<TEntity>().Update(myentity);
+
                 await SaveAsync();
                 return myentity;
             }

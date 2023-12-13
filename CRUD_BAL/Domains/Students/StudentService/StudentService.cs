@@ -10,11 +10,15 @@
             _genericService = genericService;
         }
 
-        public async Task<StudentForReadDto> AddStudent(StudentForCreateDto dto)
+        public async Task<OneOf<StudentForReadDto,Response>> AddStudent(StudentForCreateDto dto)
         {
             var adaptedStudent =dto.Adapt<Student>();
             var createdStudent = await _studentRepository.AddAsync(adaptedStudent);
-           return createdStudent.Adapt<StudentForReadDto>();
+            if(createdStudent == null)
+            {
+                return await _genericService.CreateResponse(ResponseMessages.Error, ResponseMessages.StudentCreationFailed);
+            }
+            return createdStudent.Adapt<StudentForReadDto>();
         }
 
         public async Task<OneOf<StudentForReadDto, Response>> DeleteStudent(Guid id)
@@ -40,17 +44,18 @@
             {
                 return student.Adapt<StudentForReadDto>();
             }
-            return await _genericService.CreateResponse(ResponseMessages.Error, ResponseMessages.NotFound(ResponseMessages.notFound));
+            return await _genericService.CreateResponse(ResponseMessages.Error, ResponseMessages.NotFound(ResponseMessages.Student));
         }
 
         public async Task<OneOf<StudentForReadDto, Response>> UpdateStudent(Guid id, StudentForUpdateDto dto)
         {
-            var student = await _studentRepository.Update(id, dto.Adapt<Student>());
+            var adaptedStudent = dto.Adapt<Student>();
+            var student = await _studentRepository.Update(id, adaptedStudent);
             if (student != null)
             {
                 return student.Adapt<StudentForReadDto>();
             }
-            return await _genericService.CreateResponse(ResponseMessages.Error, ResponseMessages.NotFound(ResponseMessages.notFound));
+            return await _genericService.CreateResponse(ResponseMessages.Error, ResponseMessages.NotFound(ResponseMessages.Student));
         }
     }
 }

@@ -5,6 +5,7 @@
         public const string Student = "Student";
         public const string Error = "Error";
         public const string notFound = "NotFound";
+        public const string StudentCreationFailed = "Student Creation Failed";
         public static string Deleted(string intended)
         {
             return $"{intended} Deleted Successfully!";
