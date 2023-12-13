@@ -1,7 +1,4 @@
-﻿
-using CRUD_DAL.Database.Enums;
-
-namespace CRUD_BAL.Domains.Students.DTOs
+﻿namespace CRUD_BAL.Domains.Students.DTOs
 {
     public record StudentForCreateDto
     {

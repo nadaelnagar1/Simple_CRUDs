@@ -1,13 +1,19 @@
-﻿namespace CRUD_BAL.Domains.Students.StudentServices
+﻿using CRUD_DAL.Database.ApplicationDbContext;
+using Microsoft.EntityFrameworkCore;
+
+namespace CRUD_BAL.Domains.Students.StudentServices
 {
     public class StudentService:IStudentService
     {
         private readonly IStudentRepository _studentRepository;
         private readonly IGenericService _genericService;
-        public StudentService(IStudentRepository studentRepository, IGenericService genericService)
+        private readonly ApplicationDbContext _context;
+
+        public StudentService(IStudentRepository studentRepository, IGenericService genericService, ApplicationDbContext context)
         {
             _studentRepository = studentRepository;
             _genericService = genericService;
+            _context = context;
         }
 
         public async Task<OneOf<StudentForReadDto,Response>> AddStudent(StudentForCreateDto dto)
@@ -49,11 +55,19 @@
 
         public async Task<OneOf<StudentForReadDto, Response>> UpdateStudent(Guid id, StudentForUpdateDto dto)
         {
-            var adaptedStudent = dto.Adapt<Student>();
-            var student = await _studentRepository.Update(id, adaptedStudent);
+            var student = await _studentRepository.GetByIdAsync(id);
             if (student != null)
             {
-                return student.Adapt<StudentForReadDto>();
+                _context.Entry(student).State = EntityState.Detached;
+                var adaptedStudent = dto.Adapt<Student>();
+                adaptedStudent.Id = id;
+                adaptedStudent.UpdatedAt = DateTime.UtcNow;
+                var updatedStudent = await _studentRepository.Update(adaptedStudent);
+                if (updatedStudent != null)
+                {
+                    updatedStudent.BirthDate = student.BirthDate;
+                    return updatedStudent.Adapt<StudentForReadDto>();
+                }
             }
             return await _genericService.CreateResponse(ResponseMessages.Error, ResponseMessages.NotFound(ResponseMessages.Student));
         }

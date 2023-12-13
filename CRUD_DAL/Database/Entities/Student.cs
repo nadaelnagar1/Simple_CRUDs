@@ -11,7 +11,7 @@
         public double GPA { get; set; }
         public string? StudentImage { get; set; } = "";
         public DateTime CreadtedAt { get; set; } = DateTime.UtcNow;
-        public string? UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public bool IsDeleted { get; set; } = false;
 
 

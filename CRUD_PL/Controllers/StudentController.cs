@@ -12,7 +12,7 @@ namespace CRUD_PL.Controllers
             _studentService = studentService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllStudents")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllStudents()
         {
@@ -31,7 +31,7 @@ namespace CRUD_PL.Controllers
             return result.IsT0 ? Ok(result.AsT0) : NotFound(result.AsT1);
         }
 
-        [HttpPost]
+        [HttpPost("AddStudent")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddStudent(StudentForCreateDto dto)
@@ -46,6 +46,15 @@ namespace CRUD_PL.Controllers
         public async Task<IActionResult> UpdateStudentById(Guid id ,StudentForUpdateDto dto)
         {
             var result = await _studentService.UpdateStudent(id, dto);
+            return result.IsT0 ? Ok(result.AsT0) : NotFound(result.AsT1);
+        }
+
+        [HttpDelete("DeleteStudent/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteStudent(Guid id)
+        {
+            var result = await _studentService.DeleteStudent(id);
             return result.IsT0 ? Ok(result.AsT0) : NotFound(result.AsT1);
         }
     }

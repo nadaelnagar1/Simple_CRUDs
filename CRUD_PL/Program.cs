@@ -4,7 +4,16 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+#region Cors Configuration
+string allowPolicy = "AllowAll";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(allowPolicy, p =>
+    {
+        p.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed((hosts) => true);
+    });
+});
+#endregion
 #region DBContext Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
@@ -12,7 +21,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 });
 
 #endregion
-
 #region Services Installer
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
@@ -40,6 +48,7 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
 });
+app.UseCors(allowPolicy);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

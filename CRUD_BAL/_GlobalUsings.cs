@@ -6,3 +6,6 @@ global using CRUD_DAL.Database.Entities;
 global using Mapster;
 global using Microsoft.AspNetCore.Http;
 global using OneOf;
+global using CRUD_DAL.Database.Enums;
+global using CRUD_DAL.Database.ApplicationDbContext;
+global using Microsoft.EntityFrameworkCore;

@@ -1,7 +1,4 @@
-﻿using CRUD_DAL.Database.ApplicationDbContext;
-using Microsoft.EntityFrameworkCore;
-
-namespace CRUD_DAL.Repositories.GenericRepository
+﻿namespace CRUD_DAL.Repositories.GenericRepository
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
@@ -37,7 +34,6 @@ namespace CRUD_DAL.Repositories.GenericRepository
         public async Task<TEntity> GetByIdAsync(Guid id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
-
         }
 
         public async Task SaveAsync()
@@ -46,18 +42,21 @@ namespace CRUD_DAL.Repositories.GenericRepository
 
         }
 
-        public async Task<TEntity> Update(Guid Id, TEntity entity)
+        public async Task<TEntity> Update(TEntity entity)
         {
-            var myentity = await _context.Set<TEntity>().FindAsync(Id);
-            if (myentity != null)
-            {
-                 myentity = entity;
-                var updated = _context.Set<TEntity>().Update(myentity);
+            // _context.Entry(entity).State = EntityState.Modified;
+            //await SaveAsync();
+            //return entity;
 
-                await SaveAsync();
-                return myentity;
-            }
-            return null;
+           
+              // Detach the existing entity
+            
+
+            _context.Entry(entity).State = EntityState.Modified; // Attach the modified entity
+            await SaveAsync();
+            return entity;
+            //_context.Set<TEntity>().Update(entity);
+            //await SaveAsync();
         }
     }
 }

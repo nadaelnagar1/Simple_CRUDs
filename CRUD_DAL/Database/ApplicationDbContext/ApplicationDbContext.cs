@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Reflection.Emit;
-
-namespace CRUD_DAL.Database.ApplicationDbContext
+﻿namespace CRUD_DAL.Database.ApplicationDbContext
 {
     public class ApplicationDbContext :DbContext
     {
