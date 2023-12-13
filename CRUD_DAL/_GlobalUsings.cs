@@ -11,3 +11,5 @@ global using System.ComponentModel.DataAnnotations;
 global using Microsoft.EntityFrameworkCore;
 global using System;
 global using System.Reflection.Emit;
+global using CRUD_DAL.Database.ApplicationDbContext;
+global using Microsoft.EntityFrameworkCore;

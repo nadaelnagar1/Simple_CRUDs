@@ -1,4 +1,5 @@
 using CRUD_BAL.Domains.Students.StudentServices;
+using CRUD_BAL.Domains.Students.Validators;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IGenericService, GenericService>();
+builder.Services.AddTransient<StudentForCreateDtoValidator>();
+builder.Services.AddTransient<StudentForUpdateDtoValidator>();
 
 #endregion
 

@@ -9,3 +9,5 @@ global using OneOf;
 global using CRUD_DAL.Database.Enums;
 global using CRUD_DAL.Database.ApplicationDbContext;
 global using Microsoft.EntityFrameworkCore;
+global using FluentValidation;
+ 

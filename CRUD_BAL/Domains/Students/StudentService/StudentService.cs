@@ -1,5 +1,5 @@
-﻿using CRUD_DAL.Database.ApplicationDbContext;
-using Microsoft.EntityFrameworkCore;
+﻿using CRUD_BAL.Domains.Students.Validators;
+using FluentValidation;
 
 namespace CRUD_BAL.Domains.Students.StudentServices
 {
@@ -8,16 +8,29 @@ namespace CRUD_BAL.Domains.Students.StudentServices
         private readonly IStudentRepository _studentRepository;
         private readonly IGenericService _genericService;
         private readonly ApplicationDbContext _context;
+        private readonly StudentForCreateDtoValidator _createValidator;
+        private readonly StudentForUpdateDtoValidator _updateValidator;
 
-        public StudentService(IStudentRepository studentRepository, IGenericService genericService, ApplicationDbContext context)
+        public StudentService(IStudentRepository studentRepository, IGenericService genericService, ApplicationDbContext context, StudentForCreateDtoValidator createValidator, StudentForUpdateDtoValidator updateValidator)
         {
             _studentRepository = studentRepository;
             _genericService = genericService;
             _context = context;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<OneOf<StudentForReadDto,Response>> AddStudent(StudentForCreateDto dto)
         {
+            var validationResult = _createValidator.Validate(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                string concatenatedErrors = string.Join("; ", errors);
+                return await _genericService.CreateResponse(ResponseMessages.ValidationError, concatenatedErrors);
+            }
+
             var adaptedStudent =dto.Adapt<Student>();
             var createdStudent = await _studentRepository.AddAsync(adaptedStudent);
             if(createdStudent == null)
@@ -55,6 +68,15 @@ namespace CRUD_BAL.Domains.Students.StudentServices
 
         public async Task<OneOf<StudentForReadDto, Response>> UpdateStudent(Guid id, StudentForUpdateDto dto)
         {
+            var validationResult = _updateValidator.Validate(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                string concatenatedErrors = string.Join("; ", errors);
+                return await _genericService.CreateResponse(ResponseMessages.ValidationError, concatenatedErrors);
+            }
+
             var student = await _studentRepository.GetByIdAsync(id);
             if (student != null)
             {
@@ -66,6 +88,8 @@ namespace CRUD_BAL.Domains.Students.StudentServices
                 if (updatedStudent != null)
                 {
                     updatedStudent.BirthDate = student.BirthDate;
+                    updatedStudent.Gender = student.Gender;
+
                     return updatedStudent.Adapt<StudentForReadDto>();
                 }
             }

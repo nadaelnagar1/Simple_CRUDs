@@ -251,6 +251,7 @@ export class Home extends Component {
                   name="firstName"
                   value={newStudentData.firstName}
                   onChange={this.handleInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -262,6 +263,7 @@ export class Home extends Component {
                   name="lastName"
                   value={newStudentData.lastName}
                   onChange={this.handleInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -273,6 +275,7 @@ export class Home extends Component {
                   name="emailAddress"
                   value={newStudentData.emailAddress}
                   onChange={this.handleInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -283,6 +286,7 @@ export class Home extends Component {
                   name="birthDate"
                   value={newStudentData.birthDate}
                   onChange={this.handleInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -293,6 +297,7 @@ export class Home extends Component {
                   name="gender"
                   value={newStudentData.gender}
                   onChange={this.handleInputChange}
+                  required 
                 >
                   <option value="male">Male</option>
                   <option value="female">Female</option>
@@ -308,6 +313,7 @@ export class Home extends Component {
                   name="gpa"
                   value={newStudentData.gpa}
                   onChange={this.handleInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -319,6 +325,7 @@ export class Home extends Component {
                   name="studentImage"
                   value={newStudentData.studentImage}
                   onChange={this.handleInputChange}
+                  required 
                 />
               </Form.Group>
             </Form>
@@ -347,6 +354,7 @@ export class Home extends Component {
                   name="firstName"
                   value={editStudentData.firstName}
                   onChange={this.handleEditInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -358,6 +366,7 @@ export class Home extends Component {
                   name="lastName"
                   value={editStudentData.lastName}
                   onChange={this.handleEditInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -369,6 +378,7 @@ export class Home extends Component {
                   name="emailAddress"
                   value={editStudentData.emailAddress}
                   onChange={this.handleEditInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -381,6 +391,7 @@ export class Home extends Component {
                   name="gpa"
                   value={editStudentData.gpa}
                   onChange={this.handleEditInputChange}
+                  required 
                 />
               </Form.Group>
 
@@ -392,6 +403,7 @@ export class Home extends Component {
                   name="studentImage"
                   value={editStudentData.studentImage}
                   onChange={this.handleEditInputChange}
+                  required 
                 />
               </Form.Group>
             </Form>
@@ -417,7 +429,6 @@ export class Home extends Component {
                 <th>GPA</th>
                 <th>Actions</th>
 
-                {/* Add other table headers */}
               </tr>
             </thead>
             <tbody>
@@ -426,7 +437,7 @@ export class Home extends Component {
                  <td>{student.firstName} {student.lastName}</td>
                  <td>{student.emailAddress}</td>
                  <td>{this.formatDate(student.birthDate)}</td>
-                 <td>{student.gender}</td>
+                 <td>{student.gender==1?'Male':'Female'}</td>
                  <td>{student.gpa}</td>
                  <td>
                    <button type="button" className="btn btn-success m-2" onClick={() => this.handleEditModal(student.id)} >Edit</button>

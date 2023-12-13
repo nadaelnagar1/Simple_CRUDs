@@ -6,6 +6,8 @@
         public const string Error = "Error";
         public const string notFound = "NotFound";
         public const string StudentCreationFailed = "Student Creation Failed";
+        public const string ValidationError = "Validation Error";
+
         public static string Deleted(string intended)
         {
             return $"{intended} Deleted Successfully!";
